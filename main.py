@@ -19,6 +19,10 @@ products = [
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "products": products})
 
+@app.get("/about", response_class=HTMLResponse)
+def about(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+
 @app.post("/add-to-cart", response_class=RedirectResponse)
 def add_to_cart(request: Request, product_id: int = Form(...)):
     try:
@@ -37,8 +41,14 @@ def add_to_cart(request: Request, product_id: int = Form(...)):
 
 @app.get("/cart", response_class=HTMLResponse)
 def cart(request: Request):
-    cart_cookie = request.cookies.get("cart", "[]")
-    cart_ids = json.loads(cart_cookie)
+    try:
+        cart_cookie = request.cookies.get("cart")
+        cart_ids = json.loads(cart_cookie) if cart_cookie else []
+        if not isinstance(cart_ids, list):
+            cart_ids = []
+    except:
+        cart_ids = []
+
     cart_items = [p for p in products if p["id"] in cart_ids]
     return templates.TemplateResponse("cart.html", {"request": request, "items": cart_items})
 
@@ -49,8 +59,7 @@ def remove_from_cart(request: Request, product_id: int = Form(...)):
         cart = json.loads(cart_cookie) if cart_cookie else []
         if not isinstance(cart, list):
             cart = []
-    except Exception as e:
-        print("Cart cookie parse error:", e)
+    except:
         cart = []
 
     if product_id in cart:

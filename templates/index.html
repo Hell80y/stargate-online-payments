@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Organic Market</title>
+    <title>Organic Store</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <header>
-        <div><strong>Organic Market</strong></div>
-        <div>
-            <a href="/">Shop</a>
-            <a href="/cart">🛒 Cart</a>
-        </div>
+        <div class="logo">Organic Store</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/cart">Cart</a>
+        </nav>
     </header>
     <main>
-        <h1>Our Organic Products</h1>
+        <div class="hero">
+            <div class="hero-text">
+                <h1>Join The Organic Movement!</h1>
+                <p>Best quality products sourced responsibly. Fresh, sustainable and chemical-free.</p>
+                <a class="button" href="#products">Shop Now</a>
+            </div>
+            <img src="/static/img/hero.jpg" alt="Organic Products">
+        </div>
+
+        <h2 id="products">Our Products</h2>
         {% for product in products %}
         <div class="product">
             <h3>{{ product.name }}</h3>
