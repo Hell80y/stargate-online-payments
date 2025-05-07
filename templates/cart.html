@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html>
-<head><title>Your Cart</title></head>
+<head>
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
 <body>
-    <h1>Shopping Cart</h1>
-    {% if item %}
-        <p>Item: {{ item.name }} - €{{ item.price }}</p>
-        <p>Choose Payment Integration:</p>
-        <ul>
-            <li><a href="/pay-api">Pay with API Integration</a></li>
-            <li><a href="/pay-form">Pay with Payment Form</a></li>
-        </ul>
-    {% else %}
-        <p>No items in cart.</p>
-    {% endif %}
-    <a href="/">Back to products</a>
+    <header>
+        <div><strong>Organic Market</strong></div>
+        <div>
+            <a href="/">🛍️ Continue Shopping</a>
+            <a href="/cart">🛒 View Cart</a>
+        </div>
+    </header>
+    <main>
+        <h1>Shopping Cart</h1>
+        {% if item %}
+            <div class="product">
+                <p><strong>Item:</strong> {{ item.name }}</p>
+                <p><strong>Price:</strong> €{{ item.price }}</p>
+            </div>
+            <h2>Choose Payment Integration:</h2>
+            <ul>
+                <li><a href="/pay-api"><button>Pay with API Integration</button></a></li>
+                <li><a href="/pay-form"><button>Pay with Payment Form</button></a></li>
+            </ul>
+        {% else %}
+            <p>No items in cart.</p>
+        {% endif %}
+    </main>
 </body>
 </html>

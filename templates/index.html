@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head><title>Products</title></head>
+<head>
+    <title>Organic Market</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
 <body>
-    <h1>Product List</h1>
-    <ul>
+    <header>
+        <div><strong>Organic Market</strong></div>
+        <div>
+            <a href="/">Shop</a>
+            <a href="/cart">🛒 Cart</a>
+        </div>
+    </header>
+    <main>
+        <h1>Our Organic Products</h1>
         {% for product in products %}
-        <li>
-            {{ product.name }} - €{{ product.price }}
+        <div class="product">
+            <h3>{{ product.name }}</h3>
+            <p>Price: €{{ product.price }}</p>
             <form method="post" action="/add-to-cart">
                 <input type="hidden" name="product_id" value="{{ product.id }}">
                 <button type="submit">Add to Cart</button>
             </form>
-        </li>
+        </div>
         {% endfor %}
-    </ul>
+    </main>
 </body>
 </html>

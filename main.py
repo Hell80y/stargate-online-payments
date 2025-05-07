@@ -7,11 +7,12 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# Dummy product list
+# Organic-themed products
 products = [
-    {"id": 1, "name": "Product A", "price": 19.99},
-    {"id": 2, "name": "Product B", "price": 29.99},
-    {"id": 3, "name": "Product C", "price": 39.99}
+    {"id": 1, "name": "Organic Avocados", "price": 3.49},
+    {"id": 2, "name": "Fresh Kale Bunch", "price": 2.25},
+    {"id": 3, "name": "Free-Range Eggs (12)", "price": 4.75},
+    {"id": 4, "name": "Whole Grain Bread", "price": 3.00}
 ]
 
 @app.get("/", response_class=HTMLResponse)
