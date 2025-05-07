@@ -7,6 +7,7 @@ load_dotenv()
 SIBS_BEARER_TOKEN = os.getenv("SIBS_BEARER_TOKEN")
 SIBS_TERMINAL_ID = os.getenv("SIBS_TERMINAL_ID")
 SIBS_MERCHANT_ID = os.getenv("SIBS_MERCHANT_ID")
+SIBS_CLIENT_ID = os.getenv("SIBS_CLIENT_ID")
 SIBS_API_URL = os.getenv("SIBS_API_URL", "https://stargate-cer.qly.site1.sibs.pt")
 
 def create_payment_link(amount, order_id, description):
@@ -15,6 +16,7 @@ def create_payment_link(amount, order_id, description):
     headers = {
         "Authorization": f"Bearer {SIBS_BEARER_TOKEN}",
         "Content-Type": "application/json",
+        "X-IBM-Client-Id": SIBS_CLIENT_ID
     }
 
     payload = {
