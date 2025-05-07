@@ -14,11 +14,16 @@
     </header>
     <main>
         <h1>Shopping Cart</h1>
-        {% if item %}
-            <div class="product">
-                <p><strong>Item:</strong> {{ item.name }}</p>
-                <p><strong>Price:</strong> €{{ item.price }}</p>
-            </div>
+        {% if items %}
+            {% for item in items %}
+                <div class="product">
+                    <p><strong>{{ item.name }}</strong> - €{{ item.price }}</p>
+                    <form method="post" action="/remove-from-cart">
+                        <input type="hidden" name="product_id" value="{{ item.id }}">
+                        <button type="submit">Remove</button>
+                    </form>
+                </div>
+            {% endfor %}
             <h2>Choose Payment Integration:</h2>
             <ul>
                 <li><a href="/pay-api"><button>Pay with API Integration</button></a></li>

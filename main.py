@@ -2,12 +2,12 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+import json
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# Organic-themed products
 products = [
     {"id": 1, "name": "Organic Avocados", "price": 3.49},
     {"id": 2, "name": "Fresh Kale Bunch", "price": 2.25},
@@ -20,13 +20,27 @@ def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "products": products})
 
 @app.post("/add-to-cart", response_class=RedirectResponse)
-def add_to_cart(product_id: int = Form(...)):
+def add_to_cart(product_id: int = Form(...), request: Request = None):
+    cart_cookie = request.cookies.get("cart", "[]")
+    cart = json.loads(cart_cookie)
+    cart.append(product_id)
     response = RedirectResponse(url="/cart", status_code=302)
-    response.set_cookie("cart", str(product_id))
+    response.set_cookie("cart", json.dumps(cart))
     return response
 
 @app.get("/cart", response_class=HTMLResponse)
 def cart(request: Request):
-    cart_id = request.cookies.get("cart")
-    selected = next((p for p in products if str(p["id"]) == cart_id), None)
-    return templates.TemplateResponse("cart.html", {"request": request, "item": selected})
+    cart_cookie = request.cookies.get("cart", "[]")
+    cart_ids = json.loads(cart_cookie)
+    cart_items = [p for p in products if p["id"] in cart_ids]
+    return templates.TemplateResponse("cart.html", {"request": request, "items": cart_items})
+
+@app.post("/remove-from-cart", response_class=RedirectResponse)
+def remove_from_cart(product_id: int = Form(...), request: Request = None):
+    cart_cookie = request.cookies.get("cart", "[]")
+    cart = json.loads(cart_cookie)
+    if product_id in cart:
+        cart.remove(product_id)
+    response = RedirectResponse(url="/cart", status_code=302)
+    response.set_cookie("cart", json.dumps(cart))
+    return response
