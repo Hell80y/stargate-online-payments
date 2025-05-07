@@ -22,9 +22,12 @@ def home(request: Request):
 @app.post("/add-to-cart", response_class=RedirectResponse)
 def add_to_cart(request: Request, product_id: int = Form(...)):
     try:
-        cart_cookie = request.cookies.get("cart", "[]")
-        cart = json.loads(cart_cookie)
-    except:
+        cart_cookie = request.cookies.get("cart")
+        cart = json.loads(cart_cookie) if cart_cookie else []
+        if not isinstance(cart, list):
+            cart = []
+    except Exception as e:
+        print("Cart cookie parse error:", e)
         cart = []
 
     cart.append(product_id)
@@ -42,9 +45,12 @@ def cart(request: Request):
 @app.post("/remove-from-cart", response_class=RedirectResponse)
 def remove_from_cart(request: Request, product_id: int = Form(...)):
     try:
-        cart_cookie = request.cookies.get("cart", "[]")
-        cart = json.loads(cart_cookie)
-    except:
+        cart_cookie = request.cookies.get("cart")
+        cart = json.loads(cart_cookie) if cart_cookie else []
+        if not isinstance(cart, list):
+            cart = []
+    except Exception as e:
+        print("Cart cookie parse error:", e)
         cart = []
 
     if product_id in cart:
