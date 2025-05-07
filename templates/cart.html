@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Your Cart</title></head>
+<body>
+    <h1>Shopping Cart</h1>
+    {% if item %}
+        <p>Item: {{ item.name }} - €{{ item.price }}</p>
+        <p>Choose Payment Integration:</p>
+        <ul>
+            <li><a href="/pay-api">Pay with API Integration</a></li>
+            <li><a href="/pay-form">Pay with Payment Form</a></li>
+        </ul>
+    {% else %}
+        <p>No items in cart.</p>
+    {% endif %}
+    <a href="/">Back to products</a>
+</body>
+</html>

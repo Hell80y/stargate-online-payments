@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head><title>Home</title></head>
+<head><title>Products</title></head>
 <body>
-    <h1>FastAPI + Supabase Web App</h1>
-    <a href="/users">View Users</a>
+    <h1>Product List</h1>
+    <ul>
+        {% for product in products %}
+        <li>
+            {{ product.name }} - €{{ product.price }}
+            <form method="post" action="/add-to-cart">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <button type="submit">Add to Cart</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
