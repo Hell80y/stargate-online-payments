@@ -30,6 +30,12 @@ def create_payment_link(amount, order_id, description):
     }
 
     response = requests.post(url, json=payload, headers=headers)
-    response.raise_for_status()
+    try:
+        response.raise_for_status()
+        print("✅ Payment link response:", response.json())
+    except Exception as e:
+        print("❌ SIBS API Error:", e)
+        print("🔍 Response body:", response.text)
+        raise
 
     return response.json().get("redirectUrl")
