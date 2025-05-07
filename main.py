@@ -67,4 +67,33 @@ def remove_from_cart(request: Request, product_id: int = Form(...)):
 
     response = RedirectResponse(url="/cart", status_code=302)
     response.set_cookie("cart", json.dumps(cart))
+
+@app.get("/pay-api", response_class=HTMLResponse)
+def pay_api(request: Request):
+    from sibs_api import create_payment_link
+    try:
+        cart_cookie = request.cookies.get("cart")
+        cart_ids = json.loads(cart_cookie) if cart_cookie else []
+        if not isinstance(cart_ids, list):
+            cart_ids = []
+    except:
+        cart_ids = []
+
+    cart_items = [p for p in products if p["id"] in cart_ids]
+
+    if not cart_items:
+        return templates.TemplateResponse("cart.html", {"request": request, "items": []})
+
+    total = sum(item["price"] for item in cart_items)
+    order_id = "order_" + str(hash(str(cart_items)))[:8]
+    description = "Organic Store Purchase"
+
+    try:
+        payment_url = create_payment_link(total, order_id, description)
+        return RedirectResponse(url=payment_url)
+    except Exception as e:
+        print("Payment error:", e)
+        return templates.TemplateResponse("cart.html", {"request": request, "items": cart_items, "error": str(e)})
     return response
+
+
