@@ -20,9 +20,13 @@ def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "products": products})
 
 @app.post("/add-to-cart", response_class=RedirectResponse)
-def add_to_cart(product_id: int = Form(...), request: Request = None):
-    cart_cookie = request.cookies.get("cart", "[]")
-    cart = json.loads(cart_cookie)
+def add_to_cart(request: Request, product_id: int = Form(...)):
+    try:
+        cart_cookie = request.cookies.get("cart", "[]")
+        cart = json.loads(cart_cookie)
+    except:
+        cart = []
+
     cart.append(product_id)
     response = RedirectResponse(url="/cart", status_code=302)
     response.set_cookie("cart", json.dumps(cart))
@@ -36,11 +40,16 @@ def cart(request: Request):
     return templates.TemplateResponse("cart.html", {"request": request, "items": cart_items})
 
 @app.post("/remove-from-cart", response_class=RedirectResponse)
-def remove_from_cart(product_id: int = Form(...), request: Request = None):
-    cart_cookie = request.cookies.get("cart", "[]")
-    cart = json.loads(cart_cookie)
+def remove_from_cart(request: Request, product_id: int = Form(...)):
+    try:
+        cart_cookie = request.cookies.get("cart", "[]")
+        cart = json.loads(cart_cookie)
+    except:
+        cart = []
+
     if product_id in cart:
         cart.remove(product_id)
+
     response = RedirectResponse(url="/cart", status_code=302)
     response.set_cookie("cart", json.dumps(cart))
     return response
