@@ -95,5 +95,3 @@ def pay_api(request: Request):
         print("Payment error:", e)
         return templates.TemplateResponse("cart.html", {"request": request, "items": cart_items, "error": str(e)})
     return response
-
-
