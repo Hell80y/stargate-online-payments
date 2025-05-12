@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure Payment - Organic Store</title>
+</head>
+<body>
+    <h2>Secure Payment Form</h2>
+    <form class="paymentSPG" spg-context="{{ form_context }}" spg-config='{
+        "paymentMethodList": ["CARD"],
+        "amount": {
+            "value": {{ amount }},
+            "currency": "EUR"
+        },
+        "language": "en",
+        "redirectUrl": "https://yourshop.com/payment-success"
+    }'></form>
+    <script src="https://stargate-cer.qly.site1.sibs.pt/assets/js/widget.js?id={{ transaction_id }}"></script>
+</body>
+</html>
