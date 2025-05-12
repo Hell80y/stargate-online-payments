@@ -95,3 +95,40 @@ def pay_api(request: Request):
         print("Payment error:", e)
         return templates.TemplateResponse("cart.html", {"request": request, "items": cart_items, "error": str(e)})
     return response
+
+@app.get("/pay-form", response_class=HTMLResponse)
+def pay_form(request: Request):
+    from sibs_api import create_payment_form_transaction
+
+    try:
+        cart_cookie = request.cookies.get("cart")
+        cart_ids = json.loads(cart_cookie) if cart_cookie else []
+        if not isinstance(cart_ids, list):
+            cart_ids = []
+    except:
+        cart_ids = []
+
+    cart_items = [p for p in products if p["id"] in cart_ids]
+    if not cart_items:
+        return templates.TemplateResponse("cart.html", {"request": request, "items": []})
+
+    total = sum(item["price"] for item in cart_items)
+    order_id = "order_" + str(hash(str(cart_items)))[:8]
+    description = "Organic Store Purchase"
+
+    try:
+        result = create_payment_form_transaction(
+            amount=total,
+            order_id=order_id,
+            description=description,
+            customer_name="John Doe",
+            customer_email="john@example.com"
+        )
+        return templates.TemplateResponse("payment_form.html", {
+            "request": request,
+            "transaction_id": result["transaction_id"],
+            "form_context": result["form_context"],
+            "amount": result["amount"]
+        })
+    except Exception as e:
+        return templates.TemplateResponse("cart.html", {"request": request, "items": cart_items, "error": str(e)})
